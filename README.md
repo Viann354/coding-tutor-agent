@@ -1,62 +1,38 @@
-# CodeSensei — AI Coding Tutor Agent
+﻿# CodeSensei — AI Coding Tutor Agent
 
-> AI agent untuk membantu mahasiswa belajar coding menggunakan Google Gemini API.
+> Your personal AI coding tutor, powered by Google Gemini API.
 
 Built for **Google Cloud Rapid Agent Hackathon 2026**.
 
----
+## 🚀 Live Demo
+🌐 [coding-tutor-agent-production.up.railway.app](https://coding-tutor-agent-production.up.railway.app)
 
-## Features
+## ✨ Features
+- 💬 **Free Chat** — Ask anything about programming
+- 🐛 **Auto Debug & Fix** — Paste your code + error, get solution instantly
+- 📝 **Quiz Generator + Answer Check** — Practice problems by topic & level
+- 📚 **Learning Resources** — Roadmap & free study materials
+- 🗣️ **Bilingual** — Supports Indonesian & English
+- 💾 **Chat History** — All conversations saved locally
 
-- 💬 **Chat bebas** — tanya jawab seputar programming
-- 🐛 **Auto debug & fix** — paste kode + error, dapat solusi langsung
-- 📝 **Generate soal + koreksi** — latihan soal sesuai topik & level
-- 📚 **Rekomendasi materi** — roadmap & resource belajar
-- 🗣️ **Multi bahasa** — Bahasa Indonesia & English
-- 💾 **Simpan riwayat** — semua chat tersimpan di lokal
-
-## Tech Stack
-
-- **AI:** Google Gemini 1.5 Pro (via Gemini API)
+## 🛠️ Tech Stack
+- **AI:** Google Gemini 2.0 Flash (via Gemini API)
 - **Backend:** Python + Flask
-- **Frontend:** HTML/CSS/JS (Vanilla)
-- **Deployment:** Google Cloud Run
+- **Frontend:** HTML/CSS/JavaScript
+- **Deployment:** Railway
 
-## Setup Lokal
-
+## ⚙️ Local Setup
 ```bash
-# 1. Clone repo
-git clone https://github.com/username/coding-tutor-agent
+git clone https://github.com/Viann354/coding-tutor-agent
 cd coding-tutor-agent
-
-# 2. Install dependencies
 pip install -r requirements.txt
-
-# 3. Set API key
-cp .env.example .env
-# Edit .env dan isi GEMINI_API_KEY
-
-# 4. Jalankan
+# Add your API key in agent.py
 python app.py
-# Buka http://localhost:5000
+# Open http://localhost:5000
 ```
 
-## Deploy ke Google Cloud Run
+## 📹 Demo Video
+[Watch Demo Video]
 
-```bash
-# Build dan deploy
-gcloud run deploy coding-tutor-agent \
-  --source . \
-  --platform managed \
-  --region asia-southeast1 \
-  --allow-unauthenticated \
-  --set-env-vars GEMINI_API_KEY=your_key_here
-```
-
-## Demo
-
-[Link demo video]
-
-## License
-
+## 📄 License
 MIT License
