@@ -6,7 +6,7 @@ import datetime
 
 class CodingTutorAgent:
     def __init__(self):
-        api_key = os.getenv("GEMINI_API_KEY")
+        api_key = "AIzaSyByZCBpLFxuapuqlMEC-5J7kOr3JeXlJTE"
         self.client = genai.Client(api_key=api_key)
         self.model_name = "gemini-2.0-flash-lite"
         self.system_prompt = (
