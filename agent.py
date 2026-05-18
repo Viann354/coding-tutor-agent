@@ -1,14 +1,13 @@
-﻿from google import genai
-from google.genai import types
-import os
+﻿import os
 import json
 import datetime
+import urllib.request
 
 class CodingTutorAgent:
     def __init__(self):
-        api_key = "AIzaSyBSdvjZpM1Nh-hF6bn5J1Po66xjKD7EsU4"
-        self.client = genai.Client(api_key=api_key)
-        self.model_name = "gemini-2.0-flash-lite"
+        self.api_key = "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"
+        self.api_url = "https://openrouter.ai/api/v1/chat/completions"
+        self.model = "openrouter/auto"
         self.system_prompt = (
             "You are CodeSensei, a friendly and motivational coding tutor for students. "
             "Always be encouraging and helpful. Format all code in ```language``` blocks. "
@@ -16,7 +15,7 @@ class CodingTutorAgent:
         )
         self.history_file = "data/chat_history.json"
         self.history = self._load_history()
-        self.conversation = []
+        self.conversation = [{"role": "system", "content": self.system_prompt}]
 
     def _load_history(self):
         os.makedirs("data", exist_ok=True)
@@ -24,50 +23,55 @@ class CodingTutorAgent:
             try:
                 with open(self.history_file, "r", encoding="utf-8") as f:
                     return json.load(f)
-            except (json.JSONDecodeError, IOError):
+            except:
                 return []
         return []
 
     def _save_history(self, role, message):
-        entry = {
-            "role": role,
-            "message": message,
-            "timestamp": datetime.datetime.now().isoformat()
-        }
+        entry = {"role": role, "message": message, "timestamp": datetime.datetime.now().isoformat()}
         self.history.append(entry)
         try:
             with open(self.history_file, "w", encoding="utf-8") as f:
                 json.dump(self.history, f, ensure_ascii=False, indent=2)
-        except IOError as e:
-            print(f"Warning: Could not save history: {e}")
+        except:
+            pass
 
     def get_history(self):
         return self.history
 
     def clear_history(self):
         self.history = []
-        self.conversation = []
+        self.conversation = [{"role": "system", "content": self.system_prompt}]
         if os.path.exists(self.history_file):
             try:
                 os.remove(self.history_file)
-            except OSError:
+            except:
                 pass
 
     def chat(self, message):
         self._save_history("user", message)
-        self.conversation.append({"role": "user", "parts": [{"text": message}]})
+        self.conversation.append({"role": "user", "content": message})
         try:
-            response = self.client.models.generate_content(
-                model=self.model_name,
-                contents=self.conversation,
-                config=types.GenerateContentConfig(
-                    system_instruction=self.system_prompt
-                )
+            data = json.dumps({
+                "model": self.model,
+                "messages": self.conversation
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                self.api_url,
+                data=data,
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "https://coding-tutor-agent-production.up.railway.app",
+                    "X-Title": "CodeSensei"
+                }
             )
-            reply = response.text
+            with urllib.request.urlopen(req) as res:
+                result = json.loads(res.read().decode("utf-8"))
+                reply = result["choices"][0]["message"]["content"]
         except Exception as e:
             reply = f"Error: {str(e)}"
-        self.conversation.append({"role": "model", "parts": [{"text": reply}]})
+        self.conversation.append({"role": "assistant", "content": reply})
         self._save_history("assistant", reply)
         return reply
 
@@ -86,7 +90,7 @@ class CodingTutorAgent:
         return self.chat(prompt)
 
     def check_answer(self, question, user_answer, language="python"):
-        prompt = f"Question: {question}\n\nUser's answer:\n```{language}\n{user_answer}\n```\nCheck if correct and give a score 0-100."
+        prompt = f"Question: {question}\n\nUser answer:\n```{language}\n{user_answer}\n```\nCheck if correct and give a score 0-100."
         return self.chat(prompt)
 
     def recommend_resources(self, topic, level="beginner", language="python"):
