@@ -5,7 +5,7 @@ import urllib.request
 
 class CodingTutorAgent:
     def __init__(self):
-        self.api_key = os.getenv("OPENROUTER_API_KEY")
+        self.api_key = os.getenv("OPENROUTER_API_KEY", "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")
         self.api_url = "https://openrouter.ai/api/v1/chat/completions"
         self.model = "openrouter/auto"
         self.system_prompt = (
