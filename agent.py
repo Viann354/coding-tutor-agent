@@ -1,4 +1,4 @@
-from google import genai
+﻿from google import genai
 from google.genai import types
 import os
 import json
@@ -6,7 +6,7 @@ import datetime
 
 class CodingTutorAgent:
     def __init__(self):
-        api_key = "AIzaSyByZCBpLFxuapuqlMEC-5J7kOr3JeXlJTE"
+        api_key = "AIzaSyBSdvjZpM1Nh-hF6bn5J1Po66xjKD7EsU4"
         self.client = genai.Client(api_key=api_key)
         self.model_name = "gemini-2.0-flash-lite"
         self.system_prompt = (
